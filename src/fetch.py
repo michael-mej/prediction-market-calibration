@@ -1,6 +1,6 @@
 import requests
 
-payload = {"limit" : 1, "closed" : True}
+payload = {"limit" : 100, "closed" : True}
 
 r = requests.get("https://gamma-api.polymarket.com/markets", params = payload)
 
@@ -9,3 +9,4 @@ if (r.status_code == 200):
         file.write(r.text)
 else:
     print("opening the Json was unsuccesfull")
+
