@@ -4,22 +4,26 @@ This project aims at estimating prediction market accuracy, since they have been
 
 This is especially interesting right now, since the discussion around implementing prediction markets into public policy making becomes increasingly sizeable and controversial.
 
+The project answers this from inside the market rather than from a dataset. Every forecast is written down before the market price is looked at, and both are scored against the same outcomes.
+
 ## Scope
 
-- Pull resolved binary markets from the Polymarket API and store their price history and final outcome
-- Compute calibration curves and Brier scores over the full dataset
-- Break calibration down by category, time-to-resolution, volume, and price bucket
-- Predict outcomes from price-path features, using the market price itself as the baseline
+- Log a probability and a short written rationale for each macro release, recorded **before** the market price is consulted
+- Record the market price at decision time, the direction taken, the size, and the settled outcome — including decisions not to trade
+- Compute calibration curves and Brier scores for two forecasters over the same events: the market, and me
+- Break calibration down by category, time-to-resolution, and liquidity
+- Measure realised edge against the market price, net of fees
 
 ## Hypotheses
 
 - **Categories**: Multiple academic studies, such as the paper "Prediction Markets? The Accuracy and Efficiency of $2.4 Billion in the 2024 Presidential Election" by Joshua D. Clinton and TzuFeng Huang at Vanderbilt, established that accuracy varies by category. Public-speech-based prediction markets and sports markets are often cited to be among the least accurate.
-- **Time-to-resolution**: It is a well documented phenomenon that markets with long resolution times are less accurate, since they present less incentive for competent traders to trade on. Capital locked in a long-dated contract cannot earn a return elsewhere, so traders discount distant markets.
-- **Volume**: Likely the most important factor. More trade leads to more information flow in and out of the market.
+- **Liquidity**: Likely the most important factor. More trade leads to more information flow in and out of the market. Thinly traded contracts should show both larger calibration errors and wider spreads.
 - **Price buckets**: This is where the favourite-longshot bias would take place.
+- **Time-to-resolution**: Long-dated contracts are usually held to be less accurate, since capital locked in them cannot earn a return elsewhere and competent traders stay away. ForecastEx pays a coupon on held contracts, which removes that disincentive, so the usual decay in accuracy with horizon should be weaker here than on venues without one.
+- **Scheduled releases**: Where a settlement figure is partly published before expiry, such as monthly GDP components within a quarter, prices should track the incoming data. Any lag is a measurable edge.
 
 ## Out of scope
 
-- **One platform**: Polymarket only, since it is the only one that is big enough while also enabling access to past trading data.
-- **No live data**: only markets that have already resolved.
-- **No trading**: no automated or live execution. Any strategy is evaluated on paper against the market price.
+- **One venue**: ForecastEx via IBKR only.
+- **No automation**: Decided to settle on no API, no execution code. Decisions are made and logged by hand.
+- **No discretionary non-macro trading**: contracts settling on announcements rather than published data are excluded, since they cannot be priced against a public series.
